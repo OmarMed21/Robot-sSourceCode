@@ -16,3 +16,5 @@
 [8] : https://pykit.org/chatbot-in-python-using-nlp/ ==> Sample Ai Chat Bot with explained steps
 
 [9] : https://machinelearningmastery.com/use-word-embedding-layers-deep-learning-keras/ ==> Embedding explaining
+
+[10] : https://www.youtube.com/playlist?list=PLQY2H8rRoyvzDbLUZkbudP-MFQZwNmU4S ==> NLP TensorFlow Full Explanation with Implementation
