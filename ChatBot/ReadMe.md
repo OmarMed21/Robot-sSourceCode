@@ -22,3 +22,5 @@
 [11] : https://www.youtube.com/playlist?list=PL3FW7Lu3i5Jsnh1rnUwq_TcylNr7EkRe6 ==> Lecture Collection | Natural Language Processing with Deep Learning
 
 [12] : https://www.youtube.com/watch?v=tLsg01D6k6g ==> Emotion Classifer from Text NLP Project
+
+[13] : https://www.youtube.com/watch?v=Y5atyJbVsAU&list=PLU9tksFlQRirGvp7qOGrrU1PwcjgV8TG1 ==> Build Your Own AI Assistant 
