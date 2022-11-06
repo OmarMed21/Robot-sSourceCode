@@ -1,9 +1,11 @@
 ## till that moment we're going to call our robot "Tornado"
 from main import CONVERSATION, TASKS, ITEM ## import the proper dependencies
 import pyjokes ## specific library to insert jokes
+import joblib
 
 Tornado = CONVERSATION()
 tasks = TASKS()
+emotion_detecion = joblib.load(open("Emotions_classification_model.pkl", "rb"))
 
 def joke():
     funny = pyjokes.get_joke()
@@ -50,7 +52,7 @@ name = "mark"
 while True and command != "goodbye":
     situation = True
     command = Tornado.listen(name)
-    print(f'command was : {command} of type {type(str(command))} ')
+    print(f'command was : {command} of type {type(str(command))}\nI Think you got {emotion_detecion.predict([command])[0]} Feeelings')
     commad_lst = list(command.split(" "))
     
     for i in commad_lst:
