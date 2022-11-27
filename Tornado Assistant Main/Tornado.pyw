@@ -1,10 +1,11 @@
 ## till that moment we're going to call our robot "Tornado"
-from main import CONVERSATION, TASKS, ITEM ## import the proper dependencies
+from main import CONVERSATION, TASKS, ITEM, WeatherForecasting ## import the proper dependencies
 import pyjokes ## specific library to insert jokes
 import joblib
 
 Tornado = CONVERSATION()
 tasks = TASKS()
+
 emotion_detecion = joblib.load(open("Emotions_classification_model.pkl", "rb"))
 
 def joke():
@@ -45,6 +46,12 @@ def remove_todo(user_name)->bool:
         print("Error")
         return False
 
+def weather_report():
+    weather_report = WeatherForecasting()
+    forecast = weather_report.forecast()
+    print(forecast)
+    Tornado.say(forecast)
+
 joke_commands = ['joke', 'jokes', 'funny']
 command = ""
 #name = Tornado.IsMember()
@@ -72,6 +79,11 @@ while True and command != "goodbye":
 
     if command in ["remove"]:
         remove_todo(name)
+        command = ""
+        situation = False
+
+    if "weather" in command:
+        weather_report()
         command = ""
         situation = False
 

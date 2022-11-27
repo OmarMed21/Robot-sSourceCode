@@ -1,13 +1,24 @@
+## =========> License Verification (Copyright ©️) <=========
+## Programmer(s) : Omar Medhat Aly
+## Date of Creation : 05.10.2022
+## Date of Last Modification : 27.11.2022
+## Institution \ Company : Alexandria University 
+## Supervised by : Dr.M. Habrook
+
 ## we can only use pyttsx3 version 2.71 [very important]
 import pyttsx3 ## text-to-speech conversion library in Python.
 import speech_recognition as sr
-from datetime import date ## famous package used in date stuff like converting dates to strft format
+from datetime import date, datetime ## famous package used in date stuff like converting dates to strft format
 from enum import Enum ## support for enumerations - Base class for creating enumerated constants. 
 from uuid import uuid4 ## Universal Unique Identifier, is a python library which helps in generating random objects of 128 bits as ids
 ## he generation of a v4 UUID is much simpler to comprehend. The bits that comprise a UUID v4 are generated randomly and with no inherent logic.
 from essential_proccesses import get_json ## that's self-created function to read json files and return it as a list
 from transformers import GPT2Tokenizer, GPT2LMHeadModel ## the main Model of GPT-2 [FULL EXPLAINATION IN OTHER FILE]
 import string ## used for punctuation purposes
+## PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy consumption of OWM data from Python applications 
+from pyowm import OWM ## Open Weather Management where we're using the Weather API we got access to 
+from geopy import Nominatim ## Nominatim uses OpenStreetMap data to find locations on Earth by name and address (geocoding)
+
 
 ## we're using a petrained model so we just need to download it and upload to the Script
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2') ## GPT-2 small 
@@ -397,6 +408,99 @@ class TASKS():
         if uuid:
             self.__TASKS.remove(uuid)
             return True
+
+class WeatherForecasting():
+    """
+    This Class returns a full Forecast of Weather according to your Location on Earth by Scrapping the Information from a Weather API
+    we've used https://openweathermap.org/ website to do that stuff, we can use https://meteoblue.com as well but unfortunately it's only 6 days trial
+    """
+    ## Decalre the Location .. for our situation [Alexandria, Egypt] 
+    _LOCATION = "Alexandria, EG"
+    ## our API key from OpenWeather
+    API_KEY = "c328e7069830ea49e177c0db3e223a3a"
+
+    def __init__(self, location="Alexandria, EG"):
+        """
+        Just declare and set the Variables that will be used to get the weather
+        """
+        self.OpenWeather = OWM(self.API_KEY) ## takes the API KEY to the MAP
+        self.manager = self.OpenWeather.weather_manager() ## weather Manager can be used for stuff like fetch air pollution data.
+        ## to find the location we're in we need to create a locator with Nominatim
+        locator = Nominatim(user_agent="myGeocoder") ## User_Agent is an http request header that is sent with each request.
+        ## declare our location
+        self.location = location ## that should be specifically correct as it's a database 
+        loc = locator.geocode(self.location) ## we've assigned our location to the geocoder
+        ## Geocoding is the process of transforming a street address or other description of a location into a (latitude, longitude) coordinate
+        ## so we're going to declare 'em
+        self.lat = loc.latitude
+        self.long = loc.longitude
+
+    @property
+    def get_weather(self):
+        """
+        That function should return the weather [forecasting]
+        to just notice the API we've used is called "One Call API 2.7" from OpenWeather :)
+        """
+        forecasting = self.manager.one_call(lat=self.lat, lon=self.long) ## that's what i'm talking about One Call API, takes the longitude and latitude of your location
+        return forecasting ## here it doesn't return the data as varibale , it returns as an object with it's location in memory that we should unpack
+
+    def forecast(self):
+        """That should return the forecast in the form of variable (string) """
+        """We can actually return many things like sunrise, humidty, sunset ,...etc"""
+        forecasting = self.manager.one_call(lat=self.lat, lon=self.long)
+        ## for me it's enough to just return only six forecasting items
+        daily = forecasting.forecast_daily[0].detailed_status ## weather status daily
+        hourly = forecasting.forecast_hourly[0].detailed_status ## weather status hourly
+        temp = forecasting.forecast_daily[0].temperature('celsius').get('day') ## the temprature in celsius
+        humidity = forecasting.forecast_daily[0].humidity ## THI index, we've casted it as everything should be the same type during printing
+        uvi = forecasting.forecast_daily[0].uvi ## The UVI is a measure of the level of UV radiation
+        sunrise = datetime.utcfromtimestamp(forecasting.forecast_daily[0].sunrise_time()).strftime("%H:%M:%S") ## time of sunrise
+        sunset = datetime.utcfromtimestamp(forecasting.forecast_daily[0].sunset_time()).strftime("%H:%M:%S") ## time of sunset
+
+        ## now creating our Report
+        messege = f"The Weather Report of Today states in the Following :\nFor Status: The Forecasting says that it has {daily} Today\nFor Status the Last Hour : The Forecasting says that it has {hourly} Today\nFor Humidity: {self.THI_index(humidity=humidity)}\nFor Temprature: it says it's {temp} degree Celsius Today\nFor Ultraviolet Radiation: {self.UVI_index(uvi)}\nLastly the Sunset Today was at {sunset} , while the Sunrise was at {sunrise}"
+
+        return messege
+
+    def THI_index(self, humidity:int):
+        """A temperature-humidity index (THI) is a single value representing the combined effects of air temperature 
+        and humidity associated with the level of thermal stress"""
+        """
+        Research from the Building Science Corporation found that humidity of 70% or higher adjacent to a surface can cause serious damage to the property. 
+        The Health and Safety Executive recommendsthat relative humidity indoors should be maintained at 40-70%, while other experts recommend 
+        that the range should be 30-60%
+        """
+        messege = ""
+        if humidity in range(30, 61):
+            messege = f"The Humidity is {humidity} Percentage, it's in the Perfect range according to experts"
+        elif humidity in range(61, 71):
+            messege = f"The Humidity is {humidity} Percentage,  it's still safe for chilling outside but it's almost pretty near to the Danger Zone, so take care"
+        elif humidity > 70:
+            messege = f"The Humidity is {humidity} Percentage , it's very Dangerous to go outside"
+        ## return the messege
+        return messege
+    
+    def UVI_index(self, uvi:float):
+        """
+        to detect the exact ranges we've used EPA [Environmental Protection Agency] paper to get the ranges
+        """
+        messege = ""
+        if uvi>=1 and uvi <3:
+            messege = f"it's {uvi} which's Low UVI so no Screen Protection required"
+        elif uvi >= 3 and uvi <6 :
+            messege = f"it's {uvi} which's Moderate UVI so you Skin Protection"
+        elif uvi >=6 and uvi <11:
+            messege = "It's either High or Very High UVI, it's required to have Skin Protection"
+        elif uvi > 11:
+            messege = "Don't get out, it's Extremely high UVI"
+        ## return the messege in the Report
+        return messege
+
+
+
+
+
+
 
 
 
