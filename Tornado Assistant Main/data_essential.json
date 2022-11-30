@@ -1,4 +1,17 @@
-{"reaction": [
- {"acceptance": ["yes", "yeah", "I donot mind if I do", "by all means", "sure", "of course", "definitely", "naturally", "that's right", "That's so true"]
- ,"acceptance_2": ["it's ok", "i don't mind", "no", "not", "of course not", "no i agree", "no problem"] }
-] }
+{"reaction": 
+[{
+    "acceptance": ["yes", "yeah", "I donot mind if I do", "by all means", "sure", "of course", "definitely", "naturally", "that's right", "That's so true"]
+ ,"acceptance_2": ["it's ok", "i don't mind", "no", "not", "of course not", "no i agree", "no problem"] 
+    }]
+,
+
+"commands":
+[{
+    "fact_commands": ["tell me a fact", "fact", "I wanna hear a fact", "tell me something new", "something new", "new"],
+    "joke_commands": ["tell me a joke", "joke", "tell me something funny", "funny", "i wanna laugh", "laugh"],
+    "weather_commands": ["tell me the weather", "weather", "weather forecasting", "forcasting"],
+    "add_commands": ["add more tasks", "add"],
+    "list_commands": ["list", "order", "orders", "take my orders"]
+    }]
+}
+ 

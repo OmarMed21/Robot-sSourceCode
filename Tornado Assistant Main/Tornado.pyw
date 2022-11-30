@@ -1,12 +1,12 @@
 ## till that moment we're going to call our robot "Tornado"
-from main import CONVERSATION, TASKS, ITEM, WeatherForecasting ## import the proper dependencies
+from main import CONVERSATION, TASKS, ITEM, WeatherForecasting, EmotionDetection ## import the proper dependencies
 import pyjokes ## specific library to insert jokes
 import joblib
+from randfacts import randfacts ## an additional feature of telling you facts randomly
+from essential_proccesses import get_json
 
 Tornado = CONVERSATION()
 tasks = TASKS()
-
-emotion_detecion = joblib.load(open("Emotions_classification_model.pkl", "rb"))
 
 def joke():
     funny = pyjokes.get_joke()
@@ -52,6 +52,19 @@ def weather_report():
     print(forecast)
     Tornado.say(forecast)
 
+def facts():
+    fact = randfacts.get_fact()
+    print(fact)
+    Tornado.say(fact)
+
+def EmotionDetector(command):
+    return EmotionDetection(command)
+
+def CommandTeller(tag, main='commands', json_file="data_essential.json"):
+    ## i've assigned the parameters in that order to be away from that error (SyntaxError: non-default argument follows default argument
+    output = get_json(json_file, tag, main)
+    return output
+
 joke_commands = ['joke', 'jokes', 'funny']
 command = ""
 #name = Tornado.IsMember()
@@ -59,33 +72,42 @@ name = "mark"
 while True and command != "goodbye":
     situation = True
     command = Tornado.listen(name)
-    print(f'command was : {command} of type {type(str(command))}\nI Think you got {emotion_detecion.predict([command])[0]} Feeelings')
-    commad_lst = list(command.split(" "))
+    print(f'command was : {command} \nI Think you got {EmotionDetector(command=command)} Feeelings')
+    commad_lst = set(command.split(" ")) ## we've used set instead of list just for time complexity
     
     for i in commad_lst:
         if i in joke_commands:
             joke()
             situation = False
 
-    if "add" in command :
-        add_todo(name)
-        command = ""
-        situation = False
+    for i in CommandTeller("add_commands"):
+        if i in command :
+            add_todo(name)
+            command = ""
+            situation = False
 
-    if "list" in command:
-        list_tasks()
-        command = ""
-        situation = False
+    for i in CommandTeller("list_commands"):
+        if i in command:
+            list_tasks()
+            command = ""
+            situation = False
 
     if command in ["remove"]:
         remove_todo(name)
         command = ""
         situation = False
 
-    if "weather" in command:
-        weather_report()
-        command = ""
-        situation = False
+    for i in CommandTeller("weather_commands"): 
+        if i in command:
+            weather_report()
+            command = ""
+            situation = False
+            
+    for i in CommandTeller("fact_commands"):
+        if i in command:
+            facts()
+            command = ""
+            situation = False
 
     if situation:
         Tornado.text_generation(command)

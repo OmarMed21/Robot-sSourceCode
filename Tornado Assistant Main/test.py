@@ -1,11 +1,12 @@
-from asyncio import Task
-import pyttsx3
-import json
-import speech_recognition as sr
-from main import ITEM, CONVERSATION, TASKS, WeatherForecasting
-from pyowm import OWM
-from geopy import Nominatim
-from datetime import datetime
+# from asyncio import Task
+# import pyttsx3
+# import json
+# import speech_recognition as sr
+# from main import ITEM, CONVERSATION, TASKS, WeatherForecasting
+# from pyowm import OWM
+# from geopy import Nominatim
+# from datetime import datetime
+from essential_proccesses import get_json
 
 # recognizer = sr.Recognizer()
 # microphone = sr.Microphone()
@@ -146,25 +147,51 @@ from datetime import datetime
 
 # add_todo("omar")
 
-API_KEY = "c328e7069830ea49e177c0db3e223a3a"
+# API_KEY = "c328e7069830ea49e177c0db3e223a3a"
 
-OpenWeather = OWM(API_KEY) ## takes the API KEY to the MAP
-manager = OpenWeather.weather_manager() ## weather Manager can be used for stuff like fetch air pollution data.
-## to find the location we're in we need to create a locator with Nominatim
-locator = Nominatim(user_agent="myGeocoder") ## User_Agent is an http request header that is sent with each request.
-## declare our location
-location = "Alexandria, EG"
-loc = locator.geocode(location) ## we've assigned our location to the geocoder
-## Geocoding is the process of transforming a street address or other description of a location into a (latitude, longitude) coordinate
-## so we're going to declare 'em
-lat = loc.latitude
-long = loc.longitude
-forecasting = manager.one_call(lat=lat, lon = long)
-# daily = str(forecasting.forecast_daily[0].detailed_status)
-# print(daily)
-weather_report = WeatherForecasting()
-forecast = weather_report.forecast()
-print(forecast)
-print(forecasting.forecast_daily[0].uvi)
-# Tornado.say(forecast)
+# OpenWeather = OWM(API_KEY) ## takes the API KEY to the MAP
+# manager = OpenWeather.weather_manager() ## weather Manager can be used for stuff like fetch air pollution data.
+# ## to find the location we're in we need to create a locator with Nominatim
+# locator = Nominatim(user_agent="myGeocoder") ## User_Agent is an http request header that is sent with each request.
+# ## declare our location
+# location = "Alexandria, EG"
+# loc = locator.geocode(location) ## we've assigned our location to the geocoder
+# ## Geocoding is the process of transforming a street address or other description of a location into a (latitude, longitude) coordinate
+# ## so we're going to declare 'em
+# lat = loc.latitude
+# long = loc.longitude
+# forecasting = manager.one_call(lat=lat, lon = long)
+# # daily = str(forecasting.forecast_daily[0].detailed_status)
+# # print(daily)
+# weather_report = WeatherForecasting()
+# forecast = weather_report.forecast()
+# print(forecast)
+# print(forecasting.forecast_daily[0].uvi)
+# # Tornado.say(forecast)
 
+# engine = pyttsx3.init()
+# speech = engine.getProperty('voices')
+# engine.setProperty('voice', speech[2].id)
+# engine.say("Hello I'm here to make your fucking life")
+# engine.runAndWait()
+# x = "omar medhat aly"
+# x = list(x.split(" "))
+# names = get_json('team_members','name')
+# for i in range(len(x)):
+#     if x[i] in names[i].lower():
+#         print("ok")
+#         break
+#     else:
+#         print('no')
+#         continue
+
+def CommandTeller(tag, main='commands', json_file="data_essential.json"):
+    output = get_json(json_file, tag, main)
+    return output
+
+r = CommandTeller(tag="add_commands")
+x = "add more tasks"
+x = set(x.split(" "))
+for i in r:
+    if i in x:
+        print("x")

@@ -1,7 +1,7 @@
 ## =========> License Verification (Copyright ©️) <=========
 ## Programmer(s) : Omar Medhat Aly
 ## Date of Creation : 05.10.2022
-## Date of Last Modification : 27.11.2022
+## Date of Last Modification : 28.11.2022
 ## Institution \ Company : Alexandria University 
 ## Supervised by : Dr.M. Habrook
 
@@ -18,11 +18,15 @@ import string ## used for punctuation purposes
 ## PyOWM is a client Python wrapper library for OpenWeatherMap web APIs. It allows quick and easy consumption of OWM data from Python applications 
 from pyowm import OWM ## Open Weather Management where we're using the Weather API we got access to 
 from geopy import Nominatim ## Nominatim uses OpenStreetMap data to find locations on Earth by name and address (geocoding)
-
+from nrclex import NRCLex ## pretrained research Model by National Research Council Canada's 
+import numpy as np ## the fastest Package to perform any Calculations
+import joblib ## It has various usages but in our case just to initialize the Model
 
 ## we're using a petrained model so we just need to download it and upload to the Script
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2') ## GPT-2 small 
 model = GPT2LMHeadModel.from_pretrained('gpt2', pad_token_id=tokenizer.eos_token_id)
+## old Model to detect Emotions for Emergency
+emotion_detecion = joblib.load(open("Emotions_classification_model.pkl", "rb"))
 
 class CONVERSATION():
     """
@@ -44,7 +48,7 @@ class CONVERSATION():
         self.engine = pyttsx3.init()
         self.voices = self.engine.getProperty('voices')
         ## changing the voice of the robot to be female
-        self.engine.setProperty('voice', self.voices[0].id) #changing index changes voices but ony 0 and 1 are working here
+        self.engine.setProperty('voice', self.voices[0].id) # after some modifications in System Files now we can use 3 voices [0 --> 2]
         self.recognizer = sr.Recognizer() ## voice recognition
         self.microphone = sr.Microphone() ## the microphone we're going to use
 
@@ -119,6 +123,7 @@ class CONVERSATION():
     def IsMember(self):
         ## Names List
         NAMES = get_json(filename="team_members", tag="name")
+        IDS = get_json(filename='team_members', tag='ID')
         ACCEPTANCE_PHRASES = get_json("data_essential.json", "acceptance", "reaction")
         user_name = ""
         ## it's essential to let the robot understand you in English
@@ -496,7 +501,29 @@ class WeatherForecasting():
         ## return the messege in the Report
         return messege
 
+class EmotionDetection():
+    """I've made a whole class to detect the emotions just bec we're going to choose between to models to display the Output 
+        by giving the Major to NRC reasearch
+    """
+    def __init__(self, input_text):
+        self.text = input_text
+    
+    def TheMajorDetector(self):
+        """The Major Model, It has just a Limitaion as if it couldn't detect the Emotion it'll return nothing 
+        so in that moment we'll switch to option 2 of our old Model
+        """
+        try:
+            emotion = NRCLex(self.text) ## taking the Input and perform the Operations on it
+            ## the Following line is excecuted by that way as that Method returns propabilitis of various Emotions as Dictionary 
+            ## we just need the Highest emotion with the highest score
+            output = list(emotion.raw_emotion_scores.keys())[np.argmax(list(emotion.raw_emotion_scores.values()))]
+            return output
+        except ValueError or TypeError as e:
+            print("I can't detect the Feelings")
 
+    def MinorDetector(self):
+        ## just for Emergency
+        return emotion_detecion.predict([self.text])[0]
 
 
 
