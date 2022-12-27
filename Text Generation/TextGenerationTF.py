@@ -2,16 +2,17 @@
 ## After a long time of Trainig ..we should now load the Model with two Pickle Files and begin using it ##
 ##########################################################################################################
 
-## import the proper packages 
+## import the proper packages
 import pickle
+
 import numpy as np
-from keras.layers import LSTM, Dropout, Dense
-from keras.models import Sequential 
-import tqdm ## tqdm is a library in Python which is used for creating Progress Meters or Progress Bars
+import tqdm  # # tqdm is a library in Python which is used for creating Progress Meters or Progress Bars
+from keras.layers import LSTM, Dense, Dropout
+from keras.models import Sequential
 
 ## our main Hyperparameters
 sequence_length = 100
-## Let's load the dictionaries that map each integer to a 
+## Let's load the dictionaries that map each integer to a
 ## character and vise-versa that we saved before in the data preparation phase
 ## Load the two pickle files
 char2int = pickle.load(open("review.txt--char2int.pickle", "rb"))
@@ -20,15 +21,17 @@ vocab_size = len(char2int)
 
 ## we need to build the Network agian but without training this time with the same Hyperparameters
 # building the model
-model = Sequential([
-    LSTM(256, input_shape=(sequence_length, vocab_size), return_sequences=True),
-   Dropout(0.3),
-LSTM(256),
-Dense(vocab_size, activation="softmax"),
-])
+model = Sequential(
+    [
+        LSTM(256, input_shape=(sequence_length, vocab_size), return_sequences=True),
+        Dropout(0.3),
+        LSTM(256),
+        Dense(vocab_size, activation="softmax"),
+    ]
+)
 
 ## Model's Path
-model_path = 'text_generation_model.h5'
+model_path = "text_generation_model.h5"
 ### now time to load the model
 model.load_weights(model_path)
 
@@ -56,5 +59,3 @@ for i in tqdm.tqdm(range(n_chars), "Generating text"):
 print("Seed:", s)
 print("Generated text:")
 print(generated)
-
-
