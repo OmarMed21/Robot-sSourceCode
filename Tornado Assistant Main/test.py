@@ -58,7 +58,7 @@ from essential_proccesses import get_json
 #             engine.say("Ok What's your Name then?") ## to say the sentence above
 #             engine.runAndWait()
 #             with microphone as source:
-#                 audio = recognizer.listen(source=source) ## Records a single phrase from source (an AudioSource instance) into an AudioData instance, which it returns.       
+#                 audio = recognizer.listen(source=source) ## Records a single phrase from source (an AudioSource instance) into an AudioData instance, which it returns.
 #                 phrase = recognizer.recognize_google(audio, show_all=False, language='en-uk')
 #                 user_name= phrase ## store the name in that variable
 #                 engine.say(f"Ok fine.. Hello {user_name}.It's Pleasure to meet you Today") ## to say the sentence above
@@ -71,7 +71,7 @@ from essential_proccesses import get_json
 
 #     ## now just testing the robot and it's performance
 #     sentence = f"Ok {user_name} that's only a testing phase you are just testing my performance of repeating and recognizing what you say.. so what do you wanna say then?"
-#     engine.say(sentence) 
+#     engine.say(sentence)
 #     engine.runAndWait()
 #     return user_name
 
@@ -86,10 +86,10 @@ from essential_proccesses import get_json
 #     with microphone as source:
 #             ans = recognizer.listen(source=source)
 #     phrase = recognizer.recognize_google(ans, show_all=False, language='en-us') ## Performs speech recognition on audio_data (an AudioData instance), using the Google Speech Recognition API.
-#     phrase_r = list(phrase.split(" ")) ## just to be able to iterate through the words 
+#     phrase_r = list(phrase.split(" ")) ## just to be able to iterate through the words
 #     print(phrase_r)
 #     if "yes" in phrase_r:
-#         ## now catching your name 
+#         ## now catching your name
 #         engine.say("Tell me your name please..")
 #         engine.runAndWait()
 #         ## if you've proved you're a member so the robot will handle the conversation with your name
@@ -108,7 +108,7 @@ from essential_proccesses import get_json
 #                 break
 #             else:
 #                 ## the assistant can't confirm your identity
-#                 ## you'll be given two choices 
+#                 ## you'll be given two choices
 #                 engine.say("You're either not a Team Member or have said something wrong..would you like to try again or continue with a new identity") ## to say the sentence above
 #                 engine.runAndWait()
 #                 ## getting your answer
@@ -121,7 +121,7 @@ from essential_proccesses import get_json
 #                     ## using recursion to redo the process again
 #                     IsMember()
 #                 else:
-#                     ## creating a new identity 
+#                     ## creating a new identity
 #                     user_name = NewIdentity()
 #     else:
 #         NewIdentity()
@@ -138,7 +138,7 @@ from essential_proccesses import get_json
 # def add_todo(user_name)->bool:
 #     item = ITEM()
 #     Tornado.say(f"Tell me your Orders {user_name}")
-    
+
 #     item.title = Tornado.listen(user_name=user_name)
 #     TASKS().new_item(item=item)
 #     message = "Added" + item.title
@@ -185,9 +185,11 @@ from essential_proccesses import get_json
 #         print('no')
 #         continue
 
-def CommandTeller(tag, main='commands', json_file="data_essential.json"):
+
+def CommandTeller(tag, main="commands", json_file="data_essential.json"):
     output = get_json(json_file, tag, main)
     return output
+
 
 r = CommandTeller(tag="add_commands")
 x = "add more tasks"
