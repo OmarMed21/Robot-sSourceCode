@@ -229,9 +229,7 @@ class Priority(Enum):
     LOW = 0
 
 class ITEM():
-    """
-    Here we're going to preprare the items and the topics that can be either discussed with the robot or added
-    """
+    """Here we're going to preprare the items and the topics that can be either discussed with the robot or added"""
     __CREATION_DATE = date.today() ## that will display the day 
     __TITLE = "empty" ## we should initialize the list of tasks to be empty and then full fill it with tasks and missions
     __STATUS = Status.NOT_STARTED ## we haven't yet ordered anything :) 
@@ -340,9 +338,7 @@ class ITEM():
         self.__URL = value
 
 class TASKS():
-    """
-    Now let's get our hands dirty and combine all the last classes
-    """
+    """Now let's get our hands dirty and combine all the last classes"""
     __TASKS = [] ## here is where we are going to store the tasks as the form of strings
 
     def __init__(self):
@@ -425,9 +421,7 @@ class WeatherForecasting():
     API_KEY = "c328e7069830ea49e177c0db3e223a3a"
 
     def __init__(self, location="Alexandria, EG"):
-        """
-        Just declare and set the Variables that will be used to get the weather
-        """
+        """Just declare and set the Variables that will be used to get the weather"""
         self.OpenWeather = OWM(self.API_KEY) ## takes the API KEY to the MAP
         self.manager = self.OpenWeather.weather_manager() ## weather Manager can be used for stuff like fetch air pollution data.
         ## to find the location we're in we need to create a locator with Nominatim
@@ -486,9 +480,7 @@ class WeatherForecasting():
         return messege
     
     def UVI_index(self, uvi:float):
-        """
-        to detect the exact ranges we've used EPA [Environmental Protection Agency] paper to get the ranges
-        """
+        """to detect the exact ranges we've used EPA [Environmental Protection Agency] paper to get the ranges"""
         messege = ""
         if uvi>=1 and uvi <3:
             messege = f"it's {uvi} which's Low UVI so no Screen Protection required"
