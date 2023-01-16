@@ -1,19 +1,21 @@
 import json
+
 import numpy as np
 
-## this function will read json files and return the values of the branch ur interessted in 
-def get_json(filename:str,  tag:str = None, major_dic:str = None):
+
+## this function will read json files and return the values of the branch ur interessted in
+def get_json(filename: str, tag: str = None, major_dic: str = None):
     ## here u should pass the file name correctly
     try:
         if filename[-5:] != ".json":
             with open(filename + ".json") as f:
                 dt = json.load(f)
         elif filename[-5:] == ".json":
-            with open(filename ) as f:
+            with open(filename) as f:
                 dt = json.load(f)
     ## checking if the file is not json
     except filename[-4:] != "json":
-        raise("Sorry only Json files")
+        raise ("Sorry only Json files")
     ## the list where we are going to store the names as strings extracted from the dictionary
     new_dict = list()
     if major_dic is not None:
