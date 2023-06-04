@@ -639,8 +639,8 @@ class EmotionDetection:
             ]
             return output
         except ValueError or TypeError as e:
-            print("I can't detect the Feelings")
-
+            MinorDetector(self.text)
+        
     def MinorDetector(self):
         ## just for Emergency
         return emotion_detecion.predict([self.text])[0]
