@@ -640,7 +640,7 @@ class EmotionDetection:
             return output
         except ValueError or TypeError as e:
             MinorDetector(self.text)
-        
+
     def MinorDetector(self):
         ## just for Emergency
         return emotion_detecion.predict([self.text])[0]
